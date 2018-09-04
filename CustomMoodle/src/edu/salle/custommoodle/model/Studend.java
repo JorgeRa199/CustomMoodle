@@ -5,11 +5,13 @@
  */
 package edu.salle.custommoodle.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author ASUS
  */
-public class Studend {
+public class Studend  {
 
     public String getName() {
         return name;
@@ -51,7 +53,32 @@ public class Studend {
     public String toString() {
         return String.format("id=%s,\n name=%s,\n lastName=%s",id,name,lastName); //To change body of generated methods, choose Tools | Templates.
     }
-     
+
+//    @Override
+//    public int compareTo(Object o) {
+//        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        return ((Studend)o).id.compareTo(id);
+//    }
+//     
+//    @Override
+//    public int hashCode(){
+//        return id.hashCode();
+//    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Studend other = (Studend) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
     
     
 }

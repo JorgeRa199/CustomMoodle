@@ -31,4 +31,16 @@ public class StudentBLO {
     public Studend find(String id){
         return studentDAO.find(id);
     }
+    
+    public Studend findByName(String Name){
+        return studentDAO.findByName(Name);
+    }
+    
+    public void delete(Studend student){
+        studentDAO.delete(student);
+    }
+    
+    public void update(Studend student){
+        studentDAO.update(student);
+    }
 }

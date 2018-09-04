@@ -16,8 +16,10 @@ public interface StudentDAO {
     public Studend save(Studend student);
     public List<Studend> findAll();
     public Studend find(String id);
-    
-    
+    //public List<Studend> findAll();
+    public Studend findByName(String name);
+    public void delete(Studend student);
+    public void update(Studend student);
     
     
 }
