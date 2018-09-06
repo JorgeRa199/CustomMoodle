@@ -32,7 +32,7 @@ public class StudentBLO {
         return studentDAO.find(id);
     }
     
-    public Studend findByName(String Name){
+    public List<Studend> findByName(String Name){
         return studentDAO.findByName(Name);
     }
     
@@ -42,5 +42,13 @@ public class StudentBLO {
     
     public void update(Studend student){
         studentDAO.update(student);
+    }
+    
+    public void load(){
+        studentDAO.load();
+    }
+    
+    public void commitChanges(){
+        studentDAO.commitChanges();
     }
 }

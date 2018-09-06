@@ -8,6 +8,7 @@ package edu.salle.custommoodle.view;
 import edu.salle.custommoodle.businesslogic.StudentBLO;
 import edu.salle.custommoodle.model.Studend;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,6 +23,7 @@ private StudentBLO studentBLO = new StudentBLO();
     public StudentWindow() {
         initComponents();
         setLocationRelativeTo(null);
+        studentBLO.load();
     }
     
     private void clearTable(){
@@ -34,9 +36,9 @@ private StudentBLO studentBLO = new StudentBLO();
          
     }
     
-    private void refreshTable(){
+    private void refreshTable(List<Studend> studentList){
         clearTable();
-    List<Studend> studentList = studentBLO.findAll();
+    
     DefaultTableModel dtm = (DefaultTableModel) tStudent.getModel();
     Object[] emptyRow = {""};
     
@@ -71,6 +73,7 @@ private StudentBLO studentBLO = new StudentBLO();
         tStudent = new javax.swing.JTable();
         bDelete = new javax.swing.JButton();
         bRefresh = new javax.swing.JButton();
+        bExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -129,6 +132,14 @@ private StudentBLO studentBLO = new StudentBLO();
         });
         getContentPane().add(bRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 120, -1, -1));
 
+        bExit.setText("Exit");
+        bExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bExitActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 260, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -144,18 +155,36 @@ private StudentBLO studentBLO = new StudentBLO();
 
     private void bSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSearchActionPerformed
         // TODO add your handling code here:
-        String id = tfId.getText();
-        Studend student = studentBLO.find(id);
-        if (student!=null) {
-            tfName.setText(student.getName());
-            tfLastName.setText(student.getLastName());
+//        String id = tfId.getText();
+//        Studend student = studentBLO.find(id);
+//        if (student!=null) {
+//            tfName.setText(student.getName());
+//            tfLastName.setText(student.getLastName());
+//        }
+        
+        String lastName = tfLastName.getText().trim();
+        if (!lastName.isEmpty()) {
+            List<Studend> studentList = studentBLO.findByName(lastName);
+            if (!studentList.isEmpty()) {
+                refreshTable(studentList);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Ypu need to fill this");
         }
+      
     }//GEN-LAST:event_bSearchActionPerformed
 
     private void bRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bRefreshActionPerformed
         // TODO add your handling code here:
-        refreshTable();
+        
+        refreshTable(studentBLO.findAll());
     }//GEN-LAST:event_bRefreshActionPerformed
+
+    private void bExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bExitActionPerformed
+        // TODO add your handling code here:
+        studentBLO.commitChanges();
+        this.dispose();
+    }//GEN-LAST:event_bExitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -194,6 +223,7 @@ private StudentBLO studentBLO = new StudentBLO();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bDelete;
+    private javax.swing.JButton bExit;
     private javax.swing.JButton bRefresh;
     private javax.swing.JButton bSave;
     private javax.swing.JButton bSearch;

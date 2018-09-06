@@ -5,8 +5,13 @@
  */
 package edu.salle.custommoodle.dataacess.implefile;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import edu.salle.custommoodle.dataacces.StudentDAO;
 import edu.salle.custommoodle.model.Studend;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,15 +47,17 @@ public class StudentDAOListImple implements StudentDAO {
     }
 
     @Override
-    public Studend findByName(String name) {
+    public List<Studend> findByName(String name) {
+        List<Studend> resStudentList = new ArrayList();
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         name = name.toLowerCase().trim();
         for (Studend student: studentList) {
-            if (student.getLastName().toLowerCase().contains(name)) {
-                return student;
+            if (student.getLastName().toLowerCase().contains(name) ||
+                    student.getName().toLowerCase().contains(name)) {
+               resStudentList.add(student);
             }
         }
-        return null;
+         return resStudentList;
     }
 
     @Override
@@ -64,6 +71,35 @@ public class StudentDAOListImple implements StudentDAO {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         int pos = studentList.indexOf(student);
         studentList.set(pos, student);
+    }
+
+    @Override
+    public void load() {
+        try {
+             Gson gson = new Gson();
+        BufferedReader br = new BufferedReader(new FileReader("students.json"));
+        studentList = gson.fromJson(br, new TypeToken<List<Studend>>(){}.getType());
+        br.close();
+            if (studentList==null) {
+                studentList = new ArrayList();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+    }
+
+    @Override
+    public void commitChanges() {
+        
+        try {
+            Gson gson = new Gson();
+            FileWriter writer = new FileWriter("students.json");
+            writer.write(gson.toJson(studentList));
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
 }
